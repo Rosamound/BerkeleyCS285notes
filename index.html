@@ -1,96 +1,1356 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Assignment 1: Imitation Learning</title>
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-</script>
-<style>
-    body {
-        font-family: "Times New Roman", Times, serif;
-        line-height: 1.6;
-        margin: 40px;
-        background-color: #f9f9f9;
-        color: #333;
-    }
-    h1, h2, h3 {
-        color: #2c3e50;
-    }
-    h1 {
-        text-align: center;
-        margin-bottom: 50px;
-    }
-    img {
-        display: block;
-        margin: 20px auto;
-        max-width: 80%;
-    }
-    .definition {
-        background-color: #f0f0f0;
-        padding: 10px 15px;
-        border-left: 5px solid #3498db;
-        margin: 15px 0;
-    }
-    p {
-        text-indent: 2em;
-    }
-    .formula {
-        text-align: center;
-        margin: 15px 0;
-        font-size: 1.1em;
-    }
-</style>
-</head>
-<body>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>UC Berkeley CS285</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
 
-<h1>Assignment 1: Imitation Learning</h1>
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
 
-<img src="assignment1-1.png" alt="Assignment Image">
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
 
-<h2>Understanding</h2>
-<div class="definition">
-<p><strong>Definition:</strong> <code>p_π(s_t)</code> denotes the state distribution of state <code>s</code> at time <code>t</code> after executing policy <code>π</code>.</p>
-</div>
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
 
-<h2>Proof</h2>
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
 
-<p>If from time 1 to t, the learned policy gives the same output as the expert policy, then the state distribution <code>p_{π_θ}(s_t)</code> at time t is the same as <code>p_{π^*}(s_t)</code>.</p>
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
 
-<p>Let <code>E_i</code> denote the event at time step <code>i</code> that <code>π_θ ≠ π^*</code>. Then we have:</p>
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
 
-<div class="formula">
-\[
-\Pr\Big[\bigcup_{i=1}^{t-1} E_i\Big] \le \sum_{i=1}^{t-1} \Pr[E_i] \le (t-1) \varepsilon
-\]
-</div>
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
 
-<p>From the relationship between Total Variation Distance (TVD) and L1 error, for two random distributions:</p>
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
 
-<div class="formula">
-\[
-D_{TV}(P,Q) = \frac{1}{2}\sum_s |P(s) - Q(s)|, \quad D_{TV}(P,Q) \le \Pr\Big[\bigcup E\Big]
-\]
-</div>
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
 
-<p>So we obtain:</p>
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
 
-<div class="formula">
-\[
-\sum_s |p_{π_θ}(s_t)-p_{π^*}(s_t)| \le 2\Pr\Big[\bigcup_{i=1}^{t-1} E_i\Big].
-\]
-</div>
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
 
-<p>Summing over t = 1 to T gives:</p>
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
 
-<div class="formula">
-\[
-\sum_{t=1}^T \sum_s |p_{π_θ}(s_t)-p_{π^*}(s_t)| 
-\le 2\sum_{t=1}^T \sum_{i=1}^{t-1} \Pr[E_i] 
-= 2\sum_{i=1}^{T-1} (T-i)\Pr[E_i] \le 2T\varepsilon
-\]
-</div>
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
 
-</body>
-</html>
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(134, 131, 126, 1);
+	fill: rgba(134, 131, 126, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(134, 131, 126, 1);
+	fill: rgba(134, 131, 126, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="292b55cb-c555-8065-bb02-e73693336c78" class="page sans"><header><h1 class="page-title">UC Berkeley CS285</h1><p class="page-description"></p></header><div class="page-body"><h1 id="292b55cb-c555-8081-a2e6-cb9d3ffe7638" class="">Assignment 1: Imitation Learning</h1><h2 id="292b55cb-c555-8091-b7b0-f8fe0b5fbe84" class="">1-1</h2><figure id="292b55cb-c555-80ae-b5ae-eeb974f01d07" class="image"><a href="https://dcn92u7ad5zj.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2U0MjQwMzcyODhkNjMzMzdiZTJjZDZhYTM5MDhjYmRfV1lYellxeGw3bUxtRFFTTmZjVlQ3V0dGdHpxaXBCVDVfVG9rZW46RFhLcmJ1RnFRb1NmUEp4SGtLOWNFb3ZUbkpnXzE3NjA5NTUzMjY6MTc2MDk1ODkyNl9WNA"><img src="https://dcn92u7ad5zj.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2U0MjQwMzcyODhkNjMzMzdiZTJjZDZhYTM5MDhjYmRfV1lYellxeGw3bUxtRFFTTmZjVlQ3V0dGdHpxaXBCVDVfVG9rZW46RFhLcmJ1RnFRb1NmUEp4SGtLOWNFb3ZUbkpnXzE3NjA5NTUzMjY6MTc2MDk1ODkyNl9WNA"/></a></figure><p id="292b55cb-c555-801b-9796-e18a8951c247" class=""><strong>Understanding: </strong>p_{\pi}(s_t)means at time t after carrying out policy \pi, the state distribution of state s.</p><p id="292b55cb-c555-8045-9fae-fd8c805a60ce" class=""><strong>Proof:</strong></p><p id="292b55cb-c555-8060-86a8-f8c791d1947d" class="">If from time 1 to t, the learned policy gives the same output as the expert policy, then the state distribution <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><msub><mi>π</mi><mi>θ</mi></msub></msub><mo stretchy="false">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p_{\pi_\theta}(s_t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0059em;vertical-align:-0.2559em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:-0.0359em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1512em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2559em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span> at time t is same as <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><msup><mi>π</mi><mo>∗</mo></msup></msub><mo stretchy="false">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p_{\pi^*}(s_t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2828em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6183em;"><span style="top:-2.786em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span>.</p><p id="292b55cb-c555-80e6-8131-c8b3229e3637" class="">let incident <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>E</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">E_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> be at time step i,<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo mathvariant="normal">≠</mo><msup><mi>π</mi><mo>∗</mo></msup></mrow><annotation encoding="application/x-tex"> \pi_\theta \neq \pi^*</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel"><span class="mrel"><span class="mord vbox"><span class="thinbox"><span class="rlap"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="inner"><span class="mord"><span class="mrel"></span></span></span><span class="fix"></span></span></span></span></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6887em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6887em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>, then <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Pr</mi><mo>⁡</mo><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">[</mo><msubsup><mo>⋃</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msubsup><msub><mi>E</mi><mi>i</mi></msub><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">]</mo><mo>≤</mo><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msubsup><mi>Pr</mi><mo>⁡</mo><mo stretchy="false">[</mo><msub><mi>E</mi><mi>i</mi></msub><mo stretchy="false">]</mo><mo>≤</mo><mo stretchy="false">(</mo><mi>t</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mi>ε</mi></mrow><annotation encoding="application/x-tex">\Pr\Big[\bigcup_{i=1}^{t-1} E_i\Big] \le \sum_{i=1}^{t-1} \Pr[E_i] \le (t-1) \varepsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.8em;vertical-align:-0.65em;"></span><span class="mop">Pr</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="delimsizing size2">[</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">⋃</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.954em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="delimsizing size2">]</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.2537em;vertical-align:-0.2997em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.954em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">Pr</span><span class="mopen">[</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mord mathnormal">ε</span></span></span></span></span><span>﻿</span></span></p><p id="292b55cb-c555-80f0-a5c8-d14655ec3fe0" class="">From the relationship of TVD(total variation distance) and L1 error（ <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>∑</mo><mi>s</mi></msub><mi mathvariant="normal">∣</mi><msub><mi>p</mi><msub><mi>π</mi><mi>θ</mi></msub></msub><mo stretchy="false">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false">)</mo><mo>−</mo><msub><mi>p</mi><msup><mi>π</mi><mo>∗</mo></msup></msub><mo stretchy="false">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false">)</mo><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">\sum_s |p_{\pi_\theta}(s_t)-p_{\pi^*}(s_t)|</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0497em;vertical-align:-0.2997em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.0017em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">∣</span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:-0.0359em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1512em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2559em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2828em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6183em;"><span style="top:-2.786em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord">∣</span></span></span></span></span><span>﻿</span></span> is the L1 error）, for 2 random distributions, <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mrow><mi>T</mi><mi>V</mi></mrow></msub><mo stretchy="false">(</mo><mi>P</mi><mo separator="true">,</mo><mi>Q</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><msub><mo>∑</mo><mi>s</mi></msub><mi mathvariant="normal">∣</mi><mi>P</mi><mo stretchy="false">(</mo><mi>s</mi><mo stretchy="false">)</mo><mo>−</mo><mi>Q</mi><mo stretchy="false">(</mo><mi>s</mi><mo stretchy="false">)</mo><mi mathvariant="normal">∣</mi><mo separator="true">,</mo><msub><mi>D</mi><mrow><mi>T</mi><mi>V</mi></mrow></msub><mo stretchy="false">(</mo><mi>P</mi><mo separator="true">,</mo><mi>Q</mi><mo stretchy="false">)</mo><mo>≤</mo><mi>Pr</mi><mo>⁡</mo><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">[</mo><msubsup><mo>⋃</mo><mrow></mrow><mrow></mrow></msubsup><mi>E</mi><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">]</mo></mrow><annotation encoding="application/x-tex">D_{TV}(P,Q) = \frac{1}{2}\sum_s |P(s) - Q(s)|, D_{TV}(P,Q) \le \Pr\Big[\bigcup_{}^{} E\Big]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">Q</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.0017em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord mathnormal">s</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">Q</span><span class="mopen">(</span><span class="mord mathnormal">s</span><span class="mclose">)</span><span class="mord">∣</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">Q</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.8em;vertical-align:-0.65em;"></span><span class="mop">Pr</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="delimsizing size2">[</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">⋃</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.5029em;"><span style="top:-1.7003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"></span></span></span><span style="top:-2.5029em;margin-right:0.05em;"><span class="pstrut" style="height:2em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mord"><span class="delimsizing size2">]</span></span></span></span></span></span><span>﻿</span></span></p><p id="292b55cb-c555-80d4-9f51-ed6464af16e3" class="">So that:</p><p id="292b55cb-c555-80c2-a404-dcd0acb54877" class=""><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>∑</mo><mi>s</mi></msub><mi mathvariant="normal">∣</mi><msub><mi>p</mi><msub><mi>π</mi><mi>θ</mi></msub></msub><mo stretchy="false">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false">)</mo><mo>−</mo><msub><mi>p</mi><msup><mi>π</mi><mo>∗</mo></msup></msub><mo stretchy="false">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false">)</mo><mi mathvariant="normal">∣</mi><mo>≤</mo><mn>2</mn><mi>Pr</mi><mo>⁡</mo><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">[</mo><msubsup><mo>⋃</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msubsup><msub><mi>E</mi><mi>i</mi></msub><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">]</mo><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">\sum_s |p_{\pi_\theta}(s_t)-p_{\pi^*}(s_t)| \le 2\Pr\Big[\bigcup_{i=1}^{t-1} E_i\Big].</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0497em;vertical-align:-0.2997em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.0017em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">∣</span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:-0.0359em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1512em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2559em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2828em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6183em;"><span style="top:-2.786em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.8em;vertical-align:-0.65em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">Pr</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="delimsizing size2">[</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">⋃</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.954em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="delimsizing size2">]</span></span><span class="mord">.</span></span></span></span></span><span>﻿</span></span><br/></p><p id="292b55cb-c555-8057-b5fb-d2e0db3ffcc9" class="">Do a summation from t=1 to t=T</p><p id="292b55cb-c555-8068-9136-fb8289f0243f" class="">So that</p><p id="292b55cb-c555-80cf-8f39-f071533fa4cd" class=""> <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><mi>T</mi></msubsup><msub><mo>∑</mo><mi>s</mi></msub><mi mathvariant="normal">∣</mi><msub><mi>p</mi><msub><mi>π</mi><mi>θ</mi></msub></msub><mo stretchy="false">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false">)</mo><mo>−</mo><msub><mi>p</mi><msup><mi>π</mi><mo>∗</mo></msup></msub><mo stretchy="false">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false">)</mo><mi mathvariant="normal">∣</mi><mo>≤</mo><mn>2</mn><msubsup><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><mi>T</mi></msubsup><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msubsup><mi>Pr</mi><mo>⁡</mo><mo stretchy="false">[</mo><msub><mi>E</mi><mi>i</mi></msub><mo stretchy="false">]</mo><mo>=</mo><mn>2</mn><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>T</mi><mo>−</mo><mn>1</mn></mrow></msubsup><mo stretchy="false">(</mo><mi>T</mi><mo>−</mo><mi>i</mi><mo stretchy="false">)</mo><mi>Pr</mi><mo>⁡</mo><mo stretchy="false">[</mo><msub><mi>E</mi><mi>i</mi></msub><mo stretchy="false">]</mo><mo>≤</mo><mn>2</mn><mi>T</mi><mi>ε</mi></mrow><annotation encoding="application/x-tex">\sum_{t=1}^T \sum_s |p_{\pi_\theta}(s_t)-p_{\pi^*}(s_t)| \le 2\sum_{t=1}^T \sum_{i=1}^{t-1} \Pr[E_i] 
+= 2\sum_{i=1}^{T-1} (T-i)\Pr[E_i] \le 2T\varepsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.2809em;vertical-align:-0.2997em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9812em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.0017em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">∣</span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:-0.0359em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1512em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2559em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2828em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6183em;"><span style="top:-2.786em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.2809em;vertical-align:-0.2997em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9812em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.954em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">Pr</span><span class="mopen">[</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.2809em;vertical-align:-0.2997em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9812em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">i</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">Pr</span><span class="mopen">[</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">2</span><span class="mord mathnormal">Tε</span></span></span></span></span><span>﻿</span></span><br/></p><h2 id="292b55cb-c555-803b-8b0e-ce6f8a04a369" class="">1-2</h2><h2 id="292b55cb-c555-806d-a3f1-c5bb67c39242" class="">1-3 Coding</h2><p id="292b55cb-c555-80a4-9382-e3f9a58c31e5" class="">File structure:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="292b55cb-c555-80ef-a779-d1f58b6b8184" class="code code-wrap"><code class="language-Plain Text" style="white-space:pre-wrap;word-break:break-all">.
+├── cs285
+│   ├── expert_data
+│   │   ├── expert_data_Ant-v4.pkl
+│   │   ├── expert_data_HalfCheetah-v4.pkl
+│   │   ├── expert_data_Hopper-v4.pkl
+│   │   └── expert_data_Walker2d-v4.pkl
+│   ├── infrastructure
+│   │   ├── colab_utils.py
+│   │   ├── __init__.py
+│   │   ├── logger.py
+│   │   ├── pytorch_util.py
+│   │   ├── replay_buffer.py
+│   │   └── utils.py
+│   ├── policies
+│   │   ├── base_policy.py
+│   │   ├── experts
+│   │   │   ├── Ant.pkl
+│   │   │   ├── HalfCheetah.pkl
+│   │   │   ├── Hopper.pkl
+│   │   │   ├── Humanoid.pkl
+│   │   │   └── Walker2d.pkl
+│   │   ├── __init__.py
+│   │   ├── loaded_gaussian_policy.py
+│   │   └── MLP_policy.py
+│   └── scripts
+│       ├── run_hw1.ipynb
+│       └── run_hw1.py
+├── cs285.egg-info
+│   ├── dependency_links.txt
+│   ├── PKG-INFO
+│   ├── SOURCES.txt
+│   └── top_level.txt
+├── cs285_fall2023_hw1.pdf
+├── installation.md
+├── README.md
+├── requirements_colab.txt
+├── requirements.txt
+└── setup.py
+</code></pre><p id="292b55cb-c555-80dc-82fd-d94a3c832105" class="">How to run the code?</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="292b55cb-c555-80c3-b391-f5a2ebd1c7f8" class="code code-wrap"><code class="language-Plain Text" style="white-space:pre-wrap;word-break:break-all">python cs285/scripts/run_hw1_behavior_cloning.py \
+  --expert_policy_file cs285/policies/experts/Hopper.pkl \
+  --expert_data cs285/expert_data/expert_Hopper.pkl \
+  --env_name Hopper-v4 \
+  --exp_name bc_Hopper \
+  --n_iter 1 \
+  --batch_size 1000 \
+  --train_batch_size 100 \
+  --eval_batch_size 1000
+
+</code></pre><ul id="292b55cb-c555-80c1-961d-e6820bc98618" class="bulleted-list"><li style="list-style-type:disc"></li></ul><blockquote id="292b55cb-c555-80c6-8e12-ec064aa67cc6" class="">if itr == 0:<p id="292b55cb-c555-80d1-a45a-cf4e762282ac" class=""><em># BC training from expert data.</em></p><p id="292b55cb-c555-803d-9dd7-c0b81381e10f" class="">paths = pickle.load(<strong>open</strong>(params[&#x27;expert_data&#x27;], &#x27;rb&#x27;))</p><p id="292b55cb-c555-801e-99ca-dd59988206e9" class="">envsteps_this_batch = 0</p><p id="292b55cb-c555-80da-8f9b-c89e500894da" class="">else:</p><p id="292b55cb-c555-8040-bb13-c29e633a9275" class=""><em># DAGGER training from sampled data relabeled by expert</em></p><p id="292b55cb-c555-80fb-804c-e7f96cfb4ed1" class="">assert params[&#x27;do_dagger&#x27;]</p><p id="292b55cb-c555-806d-950a-fecaa0ec2dd0" class=""><em># TODO: collect `params[&#x27;batch_size&#x27;]` transitions</em></p><p id="292b55cb-c555-809d-8830-d3806813588d" class=""><em># HINT: use utils.sample_trajectories</em></p><p id="292b55cb-c555-8015-95f3-da20c74ba03c" class=""><em># TODO: implement missing parts of utils.sample_trajectory</em></p><p id="292b55cb-c555-80b4-a138-f84dd349f3b1" class="">paths, envsteps_this_batch = utils.sample_trajectories(env, actor, params[&#x27;batch_size&#x27;], params[&#x27;ep_len&#x27;])</p><p id="292b55cb-c555-80d6-a5ab-c322db001de2" class=""><em># paths, envsteps_this_batch = TODO</em></p></blockquote><p id="292b55cb-c555-8034-bd87-c412605f7d35" class="">From the <code>utils.py</code> file, this should actually take use of <code>utils.sample_trajectories()</code> because it give the desired outputs.</p><p id="292b55cb-c555-80be-897b-c2d8a23de4ae" class="">For each rollout(batch), <code>params[&#x27;batch_size&#x27;]</code> number of trajectories are sampled(<code>can be seen in utils.sample_trajectories()</code>)</p><p id="292b55cb-c555-8015-a35f-dd32bfec438a" class=""><code>params[&#x27;ep_len&#x27;]</code> is the <code>max_path_lenth</code></p><ul id="292b55cb-c555-802e-93d0-cc8ab0272a24" class="bulleted-list"><li style="list-style-type:disc">-&gt; <em><code>paths, envsteps_this_batch = utils.sample_trajectories(env, actor, params[&#x27;batch_size&#x27;], params[&#x27;ep_len&#x27;])</code></em></li></ul><ul id="292b55cb-c555-8092-a2dc-c74a746d9275" class="bulleted-list"><li style="list-style-type:disc"></li></ul><blockquote id="292b55cb-c555-80ba-972d-f13b3326b320" class="">if params[&#x27;do_dagger&#x27;]:<p id="292b55cb-c555-8006-b52d-d2c8d9605170" class=""><strong>print</strong>(&quot;\nRelabelling collected observations with labels from an expert policy...&quot;)</p><p id="292b55cb-c555-80d6-889a-e3b74ffd01f3" class=""># TODO: relabel collected obsevations (from our policy) with labels from expert policy</p><p id="292b55cb-c555-8069-aa19-f74979c6ea93" class=""># HINT: query the policy (using the get_action function) with paths[i][&quot;observation&quot;]</p><p id="292b55cb-c555-80a2-86e7-c5f5b4f16dc3" class=""># and replace paths[i][&quot;action&quot;] with these expert labels</p><p id="292b55cb-c555-80e6-8ce1-f3c8dedb43bf" class="">paths = TODO</p></blockquote><p id="292b55cb-c555-8058-9816-de6e8cf5fdd5" class="">The <strong>Dataset Aggregation algorithm: (Ross et al., 2011）</strong></p><p id="292b55cb-c555-805a-bda4-c5f0ba77afd7" class="">It means when training, change the action of our policy to the action of expert policy action, only use the action output of our policy \pi_\theta to get the next observation. In order to avoid training on the wrong actions of ours.</p><ul id="292b55cb-c555-8047-907a-c6e0b8a2284d" class="bulleted-list"><li style="list-style-type:disc">-&gt;</li></ul><p id="292b55cb-c555-802d-b737-fd1c506c2de5" class=""><code>for path in paths:</code></p><p id="292b55cb-c555-806c-a3fa-ca404e47f64d" class=""><code>path[&quot;action&quot;] = expert_policy.get_action(path[&quot;observation&quot;])</code></p><ul id="292b55cb-c555-8043-aa90-f7f928a6151c" class="bulleted-list"><li style="list-style-type:disc">-&gt;</li></ul><p id="292b55cb-c555-803d-a7d6-d9e777b52e4a" class=""><code>for _ in </code><code><strong>range</strong></code><code>(params[&#x27;num_agent_train_steps_per_iter&#x27;]):</code></p><p id="292b55cb-c555-8081-9bc6-e81d26666431" class=""><em><code># TODO: sample some data from replay_buffer</code></em></p><p id="292b55cb-c555-80cd-8768-f707e9b3b47c" class=""><em><code># HINT1: how much data = params[&#x27;train_batch_size&#x27;]</code></em></p><p id="292b55cb-c555-80ec-89d1-d0888131ffe2" class=""><em><code># HINT2: use np.random.permutation to sample random indices</code></em></p><p id="292b55cb-c555-8030-856f-dd5fe7787f98" class=""><em><code># HINT3: return corresponding data points from each array (i.e., not different indices from each array)</code></em></p><p id="292b55cb-c555-802d-99f6-f3b4a9346737" class=""><em><code># for imitation learning, we only need observations and actions.</code></em></p><p id="292b55cb-c555-80eb-ad8d-de303ead7a1f" class=""><em><code>#   ob_batch, ac_batch = TODO</code></em></p><p id="292b55cb-c555-80c6-9284-c77d1e20483b" class=""><code>indices_ = np.permutation(</code><code><strong>len</strong></code><code>(replay_buffer))[:params[&quot;train_batch_size&quot;]]</code></p><p id="292b55cb-c555-806a-b3b4-cde379653541" class=""><code>ob_batch, ac_batch = replay_buffer.obs[indices_], replay_buffer.acs[indices_]</code></p><ul id="292b55cb-c555-8053-88b3-de1c9379fcb4" class="bulleted-list"><li style="list-style-type:disc">The core file: <code>MLP_policy.py</code></li></ul><p id="292b55cb-c555-80b4-acc1-cab7f764b5c9" class=""><strong>How to take use of stochastic policy instead of deterministic policy?</strong></p><ul id="292b55cb-c555-8069-b2f7-fa15afa5a13f" class="bulleted-list"><li style="list-style-type:disc">-&gt; when doing forward, use</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="292b55cb-c555-80f6-9413-f6aa0c09d530" class="code code-wrap"><code class="language-Plain Text" style="white-space:pre-wrap;word-break:break-all">def forward(self, observation):
+    mean = self.mean_net(observation)
+    std = torch.exp(self.logstd)
+    dist = torch.distributions.Normal(mean, std)
+    return dist
+</code></pre><p id="292b55cb-c555-8080-ada4-f841cbd8d873" class="">Rather than:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="292b55cb-c555-80b8-9e12-cc5fef720dd2" class="code code-wrap"><code class="language-Plain Text" style="white-space:pre-wrap;word-break:break-all">def forward(self, observation: torch.FloatTensor):
+    # 计算每个 observation 的均值（预测动作）
+    mean = self.mean_net(observation)
+    return mean
+</code></pre><p id="292b55cb-c555-80ff-9c38-ea96a4a8fc01" class=""><strong>Whether to use dist.rsample() or not?</strong></p><p id="292b55cb-c555-800b-9757-ea3bf2eac201" class="">For imitation learning, because there is no policy gradient, and we do not need to calculate the reward of each action, so we do not need to <code>return action = dist.rsample()</code> in our <code>forward()</code> function.</p><p id="292b55cb-c555-8011-9052-d70d2b172aba" class="">We can do this directly:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="292b55cb-c555-8006-8238-c6870416a395" class="code code-wrap"><code class="language-Plain Text" style="white-space:pre-wrap;word-break:break-all">defforward(self, observation: torch.FloatTensor) -&gt; Any:
+    mean = self.mean_net(observation)
+    std = torch.exp(self.logstd)
+    dist = torch.distributions.Normal(mean, std)
+    return dist
+
+def update(self, observations, expert_actions):
+    observations = ptu.from_numpy(observations)
+    expert_actions = ptu.from_numpy(expert_actions)
+    dist = self.forward(observations)
+    loss = -dist.log_prob(expert_actions).sum(dim=-1).mean()
+    # note that here log_prob gives a series of output shape: [batch_size, act_dim]
+    # so we need to first sum up each dim and then take the mean value
+
+    self.optimizer.zero_grad()
+    # this is to make sure the grad of last backward is cleared
+    loss.backward()
+    self.optimizer.step()
+    # optimize one step
+
+    return {&#x27;Training Loss&#x27;: ptu.to_numpy(loss)}
+
+</code></pre><h2 id="292b55cb-c555-805b-971d-e71366bf2dca" class="">1-4 BC</h2><p id="292b55cb-c555-8024-88bd-c34a82f1457f" class="">Evaluation and training statistics for the <code>Ant-v4</code> task at iteration 0. The policy was evaluated over approximately 5 rollouts (<code>eval_batch_size = 1000</code>) with episode length 100 (<code>ep_len = 100</code>). Training performance is also reported, including average return, standard deviation, and training loss. All values are based on logged metrics from the first iteration.<br/></p><table id="292b55cb-c555-807c-9e8c-c80eee37ec0c" class="simple-table"><thead class="simple-table-header"><tr id="292b55cb-c555-8069-b027-f986f12120e4"><th id="{BIz" class="simple-table-header-color simple-table-header">Metric</th><th id="vkeS" class="simple-table-header-color simple-table-header">Value</th></tr></thead><tbody><tr id="292b55cb-c555-809d-a2cf-f669a69266b0"><td id="{BIz" class="">Task / Environment</td><td id="vkeS" class="">Ant-v4</td></tr><tr id="292b55cb-c555-80dc-bb89-d7fee3b42667"><td id="{BIz" class="">Eval Average Return</td><td id="vkeS" class="">405.53</td></tr><tr id="292b55cb-c555-806f-8172-fdcb0b8b2bd4"><td id="{BIz" class="">Eval Std Return</td><td id="vkeS" class="">29.43</td></tr><tr id="292b55cb-c555-800b-83ae-ef2ec185c3cb"><td id="{BIz" class="">Eval Max Return</td><td id="vkeS" class="">441.64</td></tr><tr id="292b55cb-c555-808f-950b-e68baf86d42e"><td id="{BIz" class="">Eval Min Return</td><td id="vkeS" class="">359.45</td></tr><tr id="292b55cb-c555-8060-b1b4-e050bd377794"><td id="{BIz" class="">Eval Average Episode Length</td><td id="vkeS" class="">100.0</td></tr><tr id="292b55cb-c555-8076-a4f5-ec39e53464be"><td id="{BIz" class="">Train Average Return</td><td id="vkeS" class="">4681.89</td></tr><tr id="292b55cb-c555-80fa-aa4e-ce6983df7624"><td id="{BIz" class="">Train Std Return</td><td id="vkeS" class="">30.71</td></tr><tr id="292b55cb-c555-8054-85f1-cfb2fd1f739e"><td id="{BIz" class="">Train Max Return</td><td id="vkeS" class="">4712.60</td></tr><tr id="292b55cb-c555-8051-86fe-e1bc59a61187"><td id="{BIz" class="">Train Min Return</td><td id="vkeS" class="">4651.18</td></tr><tr id="292b55cb-c555-8060-9c13-e98b2b3f2b9a"><td id="{BIz" class="">Train Average Episode Length</td><td id="vkeS" class="">1000.0</td></tr><tr id="292b55cb-c555-80ae-bf3f-c1c6538be406"><td id="{BIz" class="">Training Loss</td><td id="vkeS" class="">-15.98</td></tr><tr id="292b55cb-c555-8039-93dd-cf5bbcea44b1"><td id="{BIz" class="">Training Steps So Far</td><td id="vkeS" class="">0</td></tr><tr id="292b55cb-c555-80d8-b877-c1001a4332c9"><td id="{BIz" class="">Time Since Start (s)</td><td id="vkeS" class="">21.10</td></tr></tbody></table><table id="292b55cb-c555-8080-9774-cc5d2ddd13f2" class="simple-table"><thead class="simple-table-header"><tr id="292b55cb-c555-8006-9c04-fbfb10e87b72"><th id="hWeD" class="simple-table-header-color simple-table-header">Metric</th><th id="NEbI" class="simple-table-header-color simple-table-header">Value</th></tr></thead><tbody><tr id="292b55cb-c555-8009-9870-e18c85c65b35"><td id="hWeD" class="">Task / Environment</td><td id="NEbI" class="">Ant-v4</td></tr><tr id="292b55cb-c555-804e-b191-ceb5250ec115"><td id="hWeD" class="">Eval Average Return</td><td id="NEbI" class="">405.53</td></tr><tr id="292b55cb-c555-8038-ab3e-df01c08a7b0f"><td id="hWeD" class="">Eval Std Return</td><td id="NEbI" class="">29.43</td></tr><tr id="292b55cb-c555-8000-94b8-c75504937beb"><td id="hWeD" class="">Eval Max Return</td><td id="NEbI" class="">441.64</td></tr><tr id="292b55cb-c555-8001-aef7-d43cadc662ec"><td id="hWeD" class="">Eval Min Return</td><td id="NEbI" class="">359.45</td></tr><tr id="292b55cb-c555-8053-99ba-c03241ec4b94"><td id="hWeD" class="">Eval Average Episode Length</td><td id="NEbI" class="">100.0</td></tr><tr id="292b55cb-c555-808c-836c-cf190a2319fd"><td id="hWeD" class="">Train Average Return</td><td id="NEbI" class="">4681.89</td></tr><tr id="292b55cb-c555-80dd-b9f3-d05008b07e08"><td id="hWeD" class="">Train Std Return</td><td id="NEbI" class="">30.71</td></tr><tr id="292b55cb-c555-80ad-8147-e5cedc31723a"><td id="hWeD" class="">Train Max Return</td><td id="NEbI" class="">4712.60</td></tr><tr id="292b55cb-c555-8095-b92f-da9e3a297e63"><td id="hWeD" class="">Train Min Return</td><td id="NEbI" class="">4651.18</td></tr><tr id="292b55cb-c555-809b-b4d3-de30dce54d27"><td id="hWeD" class="">Train Average Episode Length</td><td id="NEbI" class="">1000.0</td></tr><tr id="292b55cb-c555-80fb-b119-df889baeff8e"><td id="hWeD" class="">Training Loss</td><td id="NEbI" class="">-15.98</td></tr><tr id="292b55cb-c555-8049-adbe-e221120b7e6b"><td id="hWeD" class="">Training Steps So Far</td><td id="NEbI" class="">0</td></tr><tr id="292b55cb-c555-80c9-8303-fc93296efb50"><td id="hWeD" class="">Time Since Start (s)</td><td id="NEbI" class="">21.10</td></tr></tbody></table><p id="292b55cb-c555-807e-b6b3-f2651bc5c462" class="">if <code>--num_agent_train_steps_per_iter 100</code></p><table id="292b55cb-c555-806f-a9a8-e0dffd593360" class="simple-table"><thead class="simple-table-header"><tr id="292b55cb-c555-80bb-9c9a-d732e47cba1a"><th id="QUkR" class="simple-table-header-color simple-table-header">Metric</th><th id="\tig" class="simple-table-header-color simple-table-header">Value</th></tr></thead><tbody><tr id="292b55cb-c555-80b4-9b56-df8523fd5e6e"><td id="QUkR" class="">Eval Average Return</td><td id="\tig" class="">-</td></tr><tr id="292b55cb-c555-8068-91fd-f016da2724dc"><td id="QUkR" class="">Eval Std Return</td><td id="\tig" class="">27.98</td></tr><tr id="292b55cb-c555-809f-80eb-c1d9cebdec6d"><td id="QUkR" class="">Eval Max Return</td><td id="\tig" class="">-16.74</td></tr><tr id="292b55cb-c555-80e1-8306-da5b17c34448"><td id="QUkR" class="">Eval Min Return</td><td id="\tig" class="">-109.45</td></tr><tr id="292b55cb-c555-80da-a9da-c0bb963e22d9"><td id="QUkR" class="">Eval Average EpLen</td><td id="\tig" class="">80.23</td></tr><tr id="292b55cb-c555-809f-9475-c6126aca2591"><td id="QUkR" class="">Train Average Return</td><td id="\tig" class="">4681.89</td></tr><tr id="292b55cb-c555-80a3-954d-e8b78e35d59e"><td id="QUkR" class="">Train Std Return</td><td id="\tig" class="">30.71</td></tr><tr id="292b55cb-c555-807f-8cf6-eb3c3c85bb93"><td id="QUkR" class="">Train Max Return</td><td id="\tig" class="">4712.60</td></tr><tr id="292b55cb-c555-805a-b8ae-e74d5897cc74"><td id="QUkR" class="">Train Min Return</td><td id="\tig" class="">4651.18</td></tr><tr id="292b55cb-c555-80b7-9126-daac7f5e483e"><td id="QUkR" class="">Train Average EpLen</td><td id="\tig" class="">1000.0</td></tr><tr id="292b55cb-c555-8046-a3db-e669f6284527"><td id="QUkR" class="">Training Loss</td><td id="\tig" class="">3.45</td></tr><tr id="292b55cb-c555-803d-ac44-c9e4b5c9e5ca"><td id="QUkR" class="">Train Envsteps So Far</td><td id="\tig" class="">0</td></tr><tr id="292b55cb-c555-80b9-9084-cef80fc61e21"><td id="QUkR" class="">Time Since Start (s)</td><td id="\tig" class="">3.11</td></tr><tr id="292b55cb-c555-8001-aa62-d1b9a52e0765"><td id="QUkR" class="">Initial DataCollection Average Return</td><td id="\tig" class="">4681.89</td></tr></tbody></table><p id="292b55cb-c555-8034-870f-d39639eb9b70" class=""><strong>It leads to worse result, and it is rational because less training steps mean less propagation.</strong><br/></p><h2 id="292b55cb-c555-80f7-b40d-f0924222c673" class="">1-5</h2><p id="292b55cb-c555-8066-a818-eac1fd403943" class=""><br/></p><figure id="292b55cb-c555-80af-9012-edd00161289e" class="image"><a href="image.png"><img style="width:710px" src="image.png"/></a></figure><p id="292b55cb-c555-807c-b060-d2db3acfa5e4" class="">
+</p><h3 id="292b55cb-c555-8047-9604-ed7ebba05c87" class="">Appendix:All files(runnable)</h3><p id="292b55cb-c555-803c-8ccb-f870fa3ea7b2" class="">utils.py</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="292b55cb-c555-8026-af52-f158c4a806cb" class="code code-wrap"><code class="language-Plain Text" style="white-space:pre-wrap;word-break:break-all">&quot;&quot;&quot;A
+Some miscellaneous utility functions
+
+Functions to edit:
+    1. sample_trajectory
+&quot;&quot;&quot;
+
+from collections import OrderedDict
+import cv2
+import numpy as np
+import time
+
+from cs285.infrastructure import pytorch_util as ptu
+
+defsample_trajectory(env, policy, max_path_length, render=False):
+    &quot;&quot;&quot;Sample a rollout in the environment from a policy.&quot;&quot;&quot;
+
+# initialize env for the beginning of a new rollout
+    ob =  env.reset()#TODO: initial observation after resetting the env# init vars
+    obs, acs, rewards, next_obs, terminals, image_obs = [], [], [], [], [], []
+    steps = 0
+    while True:
+
+# render image of the simulated env
+        if render:
+            ifhasattr(env, &#x27;sim&#x27;):
+                img = env.sim.render(camera_name=&#x27;track&#x27;, height=500, width=500)[::-1]
+            else:
+                img = env.render(mode=&#x27;single_rgb_array&#x27;)
+            image_obs.append(cv2.resize(img, dsize=(250, 250), interpolation=cv2.INTER_CUBIC))
+
+# TODO use the most recent ob to decide what to do# ac = TODO # HINT: this is a numpy array
+        ac = policy.get_action(ob)
+        ac = ac[0]
+
+#TODO: take that action and get reward and next ob
+        next_ob, rew, done, _ = env.step(ac)
+# next_ob, rew, done, _ = TODO
+
+# TODO rollout can end due to done, or due to max_path_length
+        steps += 1
+        rollout_done = done or (steps &gt;= max_path_length)# HINT: this is either 0 or 1
+
+# record result of taking that action
+        obs.append(ob)
+        acs.append(ac)
+        rewards.append(rew)
+        next_obs.append(next_ob)
+        terminals.append(rollout_done)
+
+        ob = next_ob# jump to next timestep# end the rollout if the rollout ended
+        if rollout_done:
+            break
+
+    return {&quot;observation&quot; : np.array(obs, dtype=np.float32),
+            &quot;image_obs&quot; : np.array(image_obs, dtype=np.uint8),
+            &quot;reward&quot; : np.array(rewards, dtype=np.float32),
+            &quot;action&quot; : np.array(acs, dtype=np.float32),
+            &quot;next_observation&quot;: np.array(next_obs, dtype=np.float32),
+            &quot;terminal&quot;: np.array(terminals, dtype=np.float32)}
+
+defsample_trajectories(env, policy, min_timesteps_per_batch, max_path_length, render=False):
+    &quot;&quot;&quot;Collect rollouts until we have collected min_timesteps_per_batch steps.&quot;&quot;&quot;
+
+    timesteps_this_batch = 0
+    paths = []
+    while timesteps_this_batch &lt; min_timesteps_per_batch:
+
+#collect rollout
+        path = sample_trajectory(env, policy, max_path_length, render)
+        paths.append(path)
+
+#count steps
+        timesteps_this_batch += get_pathlength(path)
+
+    return paths, timesteps_this_batch
+
+defsample_n_trajectories(env, policy, ntraj, max_path_length, render=False):
+    &quot;&quot;&quot;Collect ntraj rollouts.&quot;&quot;&quot;
+
+    paths = []
+    for i inrange(ntraj):
+# collect rollout
+        path = sample_trajectory(env, policy, max_path_length, render)
+        paths.append(path)
+    return paths
+
+################################################################################
+
+defconvert_listofrollouts(paths, concat_rew=True):
+    &quot;&quot;&quot;
+        Take a list of rollout dictionaries
+        and return separate arrays,
+        where each array is a concatenation of that array from across the rollouts
+    &quot;&quot;&quot;
+    observations = np.concatenate([path[&quot;observation&quot;] for path in paths])
+    actions = np.concatenate([path[&quot;action&quot;] for path in paths])
+    if concat_rew:
+        rewards = np.concatenate([path[&quot;reward&quot;] for path in paths])
+    else:
+        rewards = [path[&quot;reward&quot;] for path in paths]
+    next_observations = np.concatenate([path[&quot;next_observation&quot;] for path in paths])
+    terminals = np.concatenate([path[&quot;terminal&quot;] for path in paths])
+    return observations, actions, rewards, next_observations, terminals
+
+################################################################################
+
+
+defcompute_metrics(paths, eval_paths):
+    &quot;&quot;&quot;Compute metrics for logging.&quot;&quot;&quot;
+
+# returns, for logging
+    train_returns = [path[&quot;reward&quot;].sum() for path in paths]
+    eval_returns = [eval_path[&quot;reward&quot;].sum() for eval_path in eval_paths]
+
+# episode lengths, for logging
+    train_ep_lens = [len(path[&quot;reward&quot;]) for path in paths]
+    eval_ep_lens = [len(eval_path[&quot;reward&quot;]) for eval_path in eval_paths]
+
+# decide what to log
+    logs = OrderedDict()
+    logs[&quot;Eval_AverageReturn&quot;] = np.mean(eval_returns)
+    logs[&quot;Eval_StdReturn&quot;] = np.std(eval_returns)
+    logs[&quot;Eval_MaxReturn&quot;] = np.max(eval_returns)
+    logs[&quot;Eval_MinReturn&quot;] = np.min(eval_returns)
+    logs[&quot;Eval_AverageEpLen&quot;] = np.mean(eval_ep_lens)
+
+    logs[&quot;Train_AverageReturn&quot;] = np.mean(train_returns)
+    logs[&quot;Train_StdReturn&quot;] = np.std(train_returns)
+    logs[&quot;Train_MaxReturn&quot;] = np.max(train_returns)
+    logs[&quot;Train_MinReturn&quot;] = np.min(train_returns)
+    logs[&quot;Train_AverageEpLen&quot;] = np.mean(train_ep_lens)
+
+    return logs
+
+########################################################################################
+
+defget_pathlength(path):
+    returnlen(path[&quot;reward&quot;])
+
+</code></pre><p id="292b55cb-c555-80e7-ab3f-c2dbf0138aea" class="">MLP_Policy.py</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="292b55cb-c555-8089-ac19-d9a26410b207" class="code code-wrap"><code class="language-Plain Text" style="white-space:pre-wrap;word-break:break-all">&quot;&quot;&quot;
+Defines a pytorch policy as the agent&#x27;s actor
+
+Functions to edit:
+    2. forward
+    3. update
+&quot;&quot;&quot;
+
+import abc
+import itertools
+from typing import Any
+from torch import nn
+from torch.nn import functional as F
+from torch import optim
+
+import numpy as np
+import torch
+from torch import distributions
+
+from cs285.infrastructure import pytorch_util as ptu
+from cs285.policies.base_policy import BasePolicy
+
+defbuild_mlp(
+        input_size: int,
+        output_size: int,
+        n_layers: int,
+        size: int
+) -&gt; nn.Module:
+    &quot;&quot;&quot;
+        Builds a feedforward neural network
+
+        arguments:
+            n_layers: number of hidden layers
+            size: dimension of each hidden layer
+            activation: activation of each hidden layer
+
+            input_size: size of the input layer
+            output_size: size of the output layer
+            output_activation: activation of the output layer
+
+        returns:
+            MLP (nn.Module)
+    &quot;&quot;&quot;
+    layers = []
+    in_size = input_size
+    for _ inrange(n_layers):
+        layers.append(nn.Linear(in_size, size))
+        layers.append(nn.Tanh())
+        in_size = size
+    layers.append(nn.Linear(in_size, output_size))
+
+    mlp = nn.Sequential(*layers)
+    return mlp
+
+classMLPPolicySL(BasePolicy,nn.Module, metaclass=abc.ABCMeta):
+    &quot;&quot;&quot;
+    Defines an MLP for supervised learning which maps observations to continuous
+    actions.
+
+    Attributes
+    ----------
+    mean_net: nn.Sequential
+        A neural network that outputs the mean for continuous actions
+    logstd: nn.Parameter
+        A separate parameter to learn the standard deviation of actions
+
+    Methods
+    -------
+    forward:
+        Runs a differentiable forwards pass through the network
+    update:
+        Trains the policy with a supervised learning objective
+    &quot;&quot;&quot;
+    def__init__(self,
+                 ac_dim,
+                 ob_dim,
+                 n_layers,
+                 size,
+                 learning_rate=1e-4,
+                 training=True,
+                 nn_baseline=False,
+                 **kwargs
+                 ):
+        super().__init__(**kwargs)
+
+# init vars
+        self.ac_dim = ac_dim
+        self.ob_dim = ob_dim
+        self.n_layers = n_layers
+        self.size = size
+        self.learning_rate = learning_rate
+        self.training = training
+        self.nn_baseline = nn_baseline
+
+        self.mean_net = build_mlp(
+            input_size=self.ob_dim,
+            output_size=self.ac_dim,
+            n_layers=self.n_layers, size=self.size,
+        )
+        self.mean_net.to(ptu.device)
+        self.logstd = nn.Parameter(
+
+            torch.zeros(self.ac_dim, dtype=torch.float32, device=ptu.device)
+        )
+        self.logstd.to(ptu.device)
+        self.optimizer = optim.Adam(
+            itertools.chain([self.logstd], self.mean_net.parameters()),
+            self.learning_rate
+        )
+
+    defsave(self, filepath):
+        &quot;&quot;&quot;
+        :param filepath: path to save MLP
+        &quot;&quot;&quot;
+        torch.save(self.state_dict(), filepath)
+
+    defforward(self, observation: torch.FloatTensor) -&gt; Any:
+        &quot;&quot;&quot;
+        Defines the forward pass of the network
+
+        :param observation: observation(s) to query the policy
+        :return:
+            action: sampled action(s) from the policy
+        &quot;&quot;&quot;
+#TODO: implement the forward pass of the network.# You can return anything you want, but you should be able to differentiate# through it. For example, you can return a torch.FloatTensor. You can also# return more flexible objects, such as a# `torch.distributions.Distribution` object. It&#x27;s up to you!
+        mean = self.mean_net(observation)
+        std = torch.exp(self.logstd)
+        dist = torch.distributions.Normal(mean, std)
+        return dist
+# raise NotImplementedError
+
+    defupdate(self, observations, expert_actions):
+        &quot;&quot;&quot;
+        Updates/trains the policy
+
+        :param observations: observation(s) to query the policy
+        :param expert_actions: expert_actions we want the policy to imitate
+        :return:
+            dict: &#x27;Training Loss&#x27;: supervised learning loss
+        &quot;&quot;&quot;
+#TODO: update the policy and return the loss# loss = TODO
+        observations = ptu.from_numpy(observations)
+        expert_actions = ptu.from_numpy(expert_actions)
+        dist = self.forward(observations)
+        loss = -dist.log_prob(expert_actions).sum(dim=-1).mean()
+# note that here log_prob gives a series of output shape: [batch_size, act_dim]# so we need to first sum up each dim and then take the mean value
+
+        self.optimizer.zero_grad()
+# this is to make sure the grad of last backward is cleared
+        loss.backward()
+        self.optimizer.step()
+# optimize one step
+        return {
+# You can add extra logging information here, but keep this line
+            &#x27;Training Loss&#x27;: ptu.to_numpy(loss),
+        }
+
+    defget_action(self, obs):
+        iflen(obs.shape) &gt; 1:
+            observation = obs
+        else:
+            observation = obs[None, :]
+        observation = ptu.from_numpy(observation)
+        action = self.forward(observation)
+        acs = action.rsample()
+        return ptu.to_numpy(acs)
+
+</code></pre><p id="292b55cb-c555-80ec-b900-f222aed282b5" class="">run_hw1.py</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="292b55cb-c555-8072-bea8-eec1c0ec7840" class="code code-wrap"><code class="language-Plain Text" style="white-space:pre-wrap;word-break:break-all">&quot;&quot;&quot;
+Runs behavior cloning and DAgger for homework 1
+
+Functions to edit:
+    1. run_training_loop
+&quot;&quot;&quot;
+
+import pickle
+import os
+import time
+import gym
+
+import numpy as np
+import torch
+import cv2
+from cs285.infrastructure import pytorch_util as ptu
+from cs285.infrastructure import utils
+from cs285.infrastructure.logger import Logger
+from cs285.infrastructure.replay_buffer import ReplayBuffer
+from cs285.policies.MLP_policy import MLPPolicySL
+from cs285.policies.loaded_gaussian_policy import LoadedGaussianPolicy
+
+# how many rollouts to save as videos to tensorboard
+MAX_NVIDEO = 2
+MAX_VIDEO_LEN = 40# we overwrite this in the code below
+
+MJ_ENV_NAMES = [&quot;Ant-v4&quot;, &quot;Walker2d-v4&quot;, &quot;HalfCheetah-v4&quot;, &quot;Hopper-v4&quot;]
+
+defrun_training_loop(params):
+    &quot;&quot;&quot;
+    Runs training with the specified parameters
+    (behavior cloning or dagger)
+
+    Args:
+        params: experiment parameters
+    &quot;&quot;&quot;
+
+############### INIT############## Get params, create logger, create TF session
+    logger = Logger(params[&#x27;logdir&#x27;])# used for logger part# Set random seeds
+    seed = params[&#x27;seed&#x27;]
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    ptu.init_gpu(
+        use_gpu=not params[&#x27;no_gpu&#x27;],
+        gpu_id=params[&#x27;which_gpu&#x27;]
+    )
+
+# Set logger attributes
+    log_video = True
+    log_metrics = True
+
+############### ENV############## Make the gym environment
+    env = gym.make(params[&#x27;env_name&#x27;], render_mode=None)
+    env.reset(seed=seed)
+
+# Maximum length for episodes
+    params[&#x27;ep_len&#x27;] = params[&#x27;ep_len&#x27;] or env.spec.max_episode_steps
+    MAX_VIDEO_LEN = params[&#x27;ep_len&#x27;]
+
+    assertisinstance(env.action_space, gym.spaces.Box), &quot;Environment must be continuous&quot;
+# Observation and action sizes
+    ob_dim = env.observation_space.shape[0]
+    ac_dim = env.action_space.shape[0]
+
+# simulation timestep, will be used for video saving
+    if &#x27;model&#x27; indir(env):
+        fps = 1/env.model.opt.timestep
+    else:
+        fps = env.env.metadata[&#x27;render_fps&#x27;]
+
+############### AGENT##############TODO: Implement missing functions in this class.
+    actor = MLPPolicySL(
+        ac_dim,
+        ob_dim,
+        params[&#x27;n_layers&#x27;],
+        params[&#x27;size&#x27;],
+        learning_rate=params[&#x27;learning_rate&#x27;],
+    )
+
+# replay buffer
+    replay_buffer = ReplayBuffer(params[&#x27;max_replay_buffer_size&#x27;])
+
+######################### LOAD EXPERT POLICY#######################print(&#x27;Loading expert policy from...&#x27;, params[&#x27;expert_policy_file&#x27;])
+    expert_policy = LoadedGaussianPolicy(params[&#x27;expert_policy_file&#x27;])
+    expert_policy.to(ptu.device)
+print(&#x27;Done restoring expert policy...&#x27;)
+
+######################### TRAINING LOOP######################## init vars at beginning of training
+    total_envsteps = 0
+    start_time = time.time()
+
+    for itr inrange(params[&#x27;n_iter&#x27;]):
+print(&quot;\n\n********** Iteration %i ************&quot;%itr)
+
+# decide if videos should be rendered/logged at this iteration
+        log_video = ((itr % params[&#x27;video_log_freq&#x27;] == 0) and (params[&#x27;video_log_freq&#x27;] != -1))
+# decide if metrics should be logged
+        log_metrics = (itr % params[&#x27;scalar_log_freq&#x27;] == 0)
+
+print(&quot;\nCollecting data to be used for training...&quot;)
+        if itr == 0:
+# BC training from expert data.
+            paths = pickle.load(open(params[&#x27;expert_data&#x27;], &#x27;rb&#x27;))
+            envsteps_this_batch = 0
+        else:
+# DAGGER training from sampled data relabeled by expert
+            assert params[&#x27;do_dagger&#x27;]
+#TODO: collect `params[&#x27;batch_size&#x27;]` transitions# HINT: use utils.sample_trajectories#TODO: implement missing parts of utils.sample_trajectory
+            paths, envsteps_this_batch = utils.sample_trajectories(env, actor, params[&#x27;batch_size&#x27;], params[&#x27;ep_len&#x27;])
+# paths, envsteps_this_batch = TODO# relabel the collected obs with actions from a provided expert policy
+            if params[&#x27;do_dagger&#x27;]:
+print(&quot;\nRelabelling collected observations with labels from an expert policy...&quot;)
+
+#TODO: relabel collected obsevations (from our policy) with labels from expert policy# HINT: query the policy (using the get_action function) with paths[i][&quot;observation&quot;]# and replace paths[i][&quot;action&quot;] with these expert labels
+                for path in paths:
+                    path[&quot;action&quot;] = expert_policy.get_action(path[&quot;observation&quot;])
+# paths = TODO
+
+        total_envsteps += envsteps_this_batch
+# add collected data to replay buffer
+        replay_buffer.add_rollouts(paths)
+
+# train agent (using sampled data from replay buffer)print(&#x27;\nTraining agent using sampled data from replay buffer...&#x27;)
+        training_logs = []
+        for _ inrange(params[&#x27;num_agent_train_steps_per_iter&#x27;]):
+
+#TODO: sample some data from replay_buffer# HINT1: how much data = params[&#x27;train_batch_size&#x27;]# HINT2: use np.random.permutation to sample random indices# HINT3: return corresponding data points from each array (i.e., not different indices from each array)# for imitation learning, we only need observations and actions.#   ob_batch, ac_batch = TODO
+            indices_ = np.random.permutation(len(replay_buffer))[:params[&quot;train_batch_size&quot;]]
+            ob_batch, ac_batch = replay_buffer.obs[indices_], replay_buffer.acs[indices_]
+
+# use the sampled data to train an agent
+            train_log = actor.update(ob_batch, ac_batch)
+            training_logs.append(train_log)
+
+# log/saveprint(&#x27;\nBeginning logging procedure...&#x27;)
+        if log_video:
+
+# 1️⃣ 原有功能：保存到 TensorBoardprint(&#x27;\nCollecting video rollouts eval&#x27;)
+            eval_video_paths = utils.sample_n_trajectories(
+                env, actor, MAX_NVIDEO, MAX_VIDEO_LEN, True
+            )
+
+            if eval_video_paths is not None:
+                logger.log_paths_as_videos(
+                    eval_video_paths, itr,
+                    fps=fps,
+                    max_videos_to_save=MAX_NVIDEO,
+                    video_title=&#x27;eval_rollouts&#x27;
+                )
+
+# 2️⃣ 新增功能：生成独立 mp4 文件
+            for i, path inenumerate(eval_video_paths):
+                video_frames = path[&quot;image_obs&quot;]# [T, H, W, C], numpy uint8
+                iflen(video_frames) == 0:
+                    continue
+
+                video_dir = os.path.join(params[&#x27;logdir&#x27;], &quot;videos&quot;)
+                os.makedirs(video_dir, exist_ok=True)
+                video_file = os.path.join(video_dir, f&quot;eval_rollout_{itr}_{i}.mp4&quot;)
+
+                h, w, _ = video_frames[0].shape
+                fourcc = cv2.VideoWriter_fourcc(*&#x27;mp4v&#x27;)
+                out = cv2.VideoWriter(video_file, fourcc, fps, (w, h))
+
+                for frame in video_frames:
+# 将 RGB 转为 BGR
+                    frame_bgr = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+                    out.write(frame_bgr)
+
+                out.release()
+print(f&quot;Saved video rollout to {video_file}&quot;)
+
+        if log_metrics:
+# save eval metricsprint(&quot;\nCollecting data for eval...&quot;)
+            eval_paths, eval_envsteps_this_batch = utils.sample_trajectories(
+                env, actor, params[&#x27;eval_batch_size&#x27;], params[&#x27;ep_len&#x27;])
+
+            logs = utils.compute_metrics(paths, eval_paths)
+# compute additional metrics
+            logs.update(training_logs[-1])# Only use the last log for now
+            logs[&quot;Train_EnvstepsSoFar&quot;] = total_envsteps
+            logs[&quot;TimeSinceStart&quot;] = time.time() - start_time
+            if itr == 0:
+                logs[&quot;Initial_DataCollection_AverageReturn&quot;] = logs[&quot;Train_AverageReturn&quot;]
+
+# perform the logging
+            for key, value in logs.items():
+print(&#x27;{} : {}&#x27;.format(key, value))
+                logger.log_scalar(value, key, itr)
+print(&#x27;Done logging...\n\n&#x27;)
+
+            logger.flush()
+
+        if params[&#x27;save_params&#x27;]:
+print(&#x27;\nSaving agent params&#x27;)
+            actor.save(&#x27;{}/policy_itr_{}.pt&#x27;.format(params[&#x27;logdir&#x27;], itr))
+
+defmain():
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument(&#x27;--expert_policy_file&#x27;, &#x27;-epf&#x27;, type=str, required=True)# relative to where you&#x27;re running this script from
+    parser.add_argument(&#x27;--expert_data&#x27;, &#x27;-ed&#x27;, type=str, required=True)#relative to where you&#x27;re running this script from
+    parser.add_argument(&#x27;--env_name&#x27;, &#x27;-env&#x27;, type=str, help=f&#x27;choices: {&quot;, &quot;.join(MJ_ENV_NAMES)}&#x27;, required=True)
+    parser.add_argument(&#x27;--exp_name&#x27;, &#x27;-exp&#x27;, type=str, default=&#x27;pick an experiment name&#x27;, required=True)
+    parser.add_argument(&#x27;--do_dagger&#x27;, action=&#x27;store_true&#x27;)
+    parser.add_argument(&#x27;--ep_len&#x27;, type=int,
+                        default=100)
+
+    parser.add_argument(&#x27;--num_agent_train_steps_per_iter&#x27;, type=int, default=1000)# number of gradient steps for training policy (per iter in n_iter)
+    parser.add_argument(&#x27;--n_iter&#x27;, &#x27;-n&#x27;, type=int, default=1)
+
+    parser.add_argument(&#x27;--batch_size&#x27;, type=int, default=1000)# training data collected (in the env) during each iteration
+    parser.add_argument(&#x27;--eval_batch_size&#x27;, type=int,
+                        default=1000)# eval data collected (in the env) for logging metrics
+    parser.add_argument(&#x27;--train_batch_size&#x27;, type=int,
+                        default=100)# number of sampled data points to be used per gradient/train step
+
+    parser.add_argument(&#x27;--n_layers&#x27;, type=int, default=2)# depth, of policy to be learned
+    parser.add_argument(&#x27;--size&#x27;, type=int, default=64)# width of each layer, of policy to be learned
+    parser.add_argument(&#x27;--learning_rate&#x27;, &#x27;-lr&#x27;, type=float, default=5e-3)# LR for supervised learning
+
+    parser.add_argument(&#x27;--video_log_freq&#x27;, type=int, default=5)
+    parser.add_argument(&#x27;--scalar_log_freq&#x27;, type=int, default=1)
+    parser.add_argument(&#x27;--no_gpu&#x27;, &#x27;-ngpu&#x27;, action=&#x27;store_true&#x27;)
+    parser.add_argument(&#x27;--which_gpu&#x27;, type=int, default=0)
+    parser.add_argument(&#x27;--max_replay_buffer_size&#x27;, type=int, default=1000000)
+    parser.add_argument(&#x27;--save_params&#x27;, action=&#x27;store_true&#x27;)
+    parser.add_argument(&#x27;--seed&#x27;, type=int, default=1)
+    args = parser.parse_args()
+
+# convertargs to dictionary
+    params =vars(args)
+
+##################################### CREATE DIRECTORY FOR LOGGING##################################
+
+    if args.do_dagger:
+# Use this prefix when submitting. The auto-grader uses this prefix.
+        logdir_prefix = &#x27;q2_&#x27;
+        assert args.n_iter&gt;1, (&#x27;DAGGER needs more than 1 iteration (n_iter&gt;1) of training, to iteratively query the expert and train (after 1st warmstarting from behavior cloning).&#x27;)
+    else:
+# Use this prefix when submitting. The auto-grader uses this prefix.
+        logdir_prefix = &#x27;q1_&#x27;
+        assert args.n_iter==1, (&#x27;Vanilla behavior cloning collects expert data just once (n_iter=1)&#x27;)
+
+# directory for logging
+    data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), &#x27;../../data&#x27;)
+    if not (os.path.exists(data_path)):
+        os.makedirs(data_path)
+    logdir = logdir_prefix + args.exp_name + &#x27;_&#x27; + args.env_name + &#x27;_&#x27; + time.strftime(&quot;%d-%m-%Y_%H-%M-%S&quot;)
+    logdir = os.path.join(data_path, logdir)
+    params[&#x27;logdir&#x27;] = logdir
+    if not(os.path.exists(logdir)):
+        os.makedirs(logdir)
+
+###################### RUN TRAINING###################
+
+    run_training_loop(params)
+
+if __name__ == &quot;__main__&quot;:
+    main()
+
+</code></pre></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
