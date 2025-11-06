@@ -1,45 +1,494 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Berkeley CS285 Course Notes</title>
-  <link rel="stylesheet" href="css/style.css"> <!-- 引入样式表 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Global Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    :root {
+      --primary: #003262; /* Berkeley Blue */
+      --secondary: #3B7EA1; /* Secondary Blue */
+      --accent: #FDB515; /* California Gold */
+      --light: #F8F9FA;
+      --dark: #212529;
+      --gray: #6C757D;
+    }
+
+    body {
+      background-color: #f5f7fa;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Header & Navigation */
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 1rem 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.5rem;
+    }
+
+    .logo i {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 25px;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .nav-links a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+
+    .nav-links a:hover::after {
+      width: 80%;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(rgba(0, 50, 98, 0.85), rgba(59, 126, 161, 0.85)), url('https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      padding: 5rem 0;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: var(--accent);
+      color: var(--dark);
+      padding: 12px 30px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #e6a500;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Main Content */
+    .main-content {
+      padding: 2rem 0;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 3rem;
+      color: var(--primary);
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background-color: var(--accent);
+      border-radius: 2px;
+    }
+
+    /* Cards */
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      margin-bottom: 4rem;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header {
+      background-color: var(--primary);
+      color: white;
+      padding: 1.5rem;
+    }
+
+    .card-header h2 {
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .card-body p, .card-body ul {
+      margin-bottom: 1rem;
+    }
+
+    .card-body ul {
+      padding-left: 1.5rem;
+    }
+
+    .card-body li {
+      margin-bottom: 0.5rem;
+      position: relative;
+    }
+
+    .card-body li::before {
+      content: '•';
+      color: var(--accent);
+      font-weight: bold;
+      position: absolute;
+      left: -15px;
+    }
+
+    /* Homework Section */
+    .homework-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      margin-bottom: 4rem;
+    }
+
+    .homework-card {
+      background-color: white;
+      border-radius: 10px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      border-top: 4px solid var(--secondary);
+    }
+
+    .homework-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .homework-card i {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .homework-card h3 {
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    .homework-card a {
+      display: inline-block;
+      color: var(--secondary);
+      text-decoration: none;
+      font-weight: 500;
+      margin-top: 1rem;
+      transition: color 0.3s ease;
+    }
+
+    .homework-card a:hover {
+      color: var(--primary);
+    }
+
+    /* Footer */
+    footer {
+      background-color: var(--primary);
+      color: white;
+      padding: 3rem 0 2rem;
+      margin-top: 3rem;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-bottom: 2rem;
+    }
+
+    .footer-section {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .footer-section h3 {
+      margin-bottom: 1.5rem;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .footer-section h3::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 2px;
+      background-color: var(--accent);
+    }
+
+    .footer-links {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 10px;
+    }
+
+    .footer-links a {
+      color: #ddd;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: white;
+      padding-left: 5px;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+      
+      .hero p {
+        font-size: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- 导航栏 -->
-  <div class="navbar">
-    <a href="index.html">Main Page</a>
-    <a href="hw1/hw1.html">Homework 1</a>
-    <a href="hw2/hw2.html">Homework 2</a>
-    <a href="hw3/hw3.html">Homework 3</a>
-    <a href="hw4/hw4.html">Homework 4</a>
-    <a href="hw5/hw5.html">Homework 5</a>
+  <!-- Header & Navigation -->
+  <header>
+    <div class="container">
+      <div class="navbar">
+        <div class="logo">
+          <i class="fas fa-graduation-cap"></i>
+          <span>CS285 Notes</span>
+        </div>
+        <div class="nav-links">
+          <a href="index.html">Main Page</a>
+          <a href="hw1/hw1.html">Homework 1</a>
+          <a href="hw2/hw2.html">Homework 2</a>
+          <a href="hw3/hw3.html">Homework 3</a>
+          <a href="hw4/hw4.html">Homework 4</a>
+          <a href="hw5/hw5.html">Homework 5</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1>Berkeley CS285 Course Notes</h1>
+      <p>A comprehensive resource for Deep Reinforcement Learning, documenting the journey of self-directed learning</p>
+      <a href="#content" class="btn">Explore Notes</a>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <div class="container main-content" id="content">
+    <!-- Welcome & Course Info -->
+    <div class="cards-container">
+      <div class="card">
+        <div class="card-header">
+          <h2><i class="fas fa-book-open"></i> Welcome to CS285 Course Notes!</h2>
+        </div>
+        <div class="card-body">
+          <p>This is the page for CS285 (Deep Reinforcement Learning). It is a record of the struggle and progress of someone trying to teach herself this challenging subject.</p>
+          <p>The notes cover fundamental concepts, practical implementations, and advanced topics in reinforcement learning, with a focus on deep learning approaches.</p>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <h2><i class="fas fa-star"></i> Course Highlights</h2>
+        </div>
+        <div class="card-body">
+          <ul>
+            <li>Instructed by senior faculty from UC Berkeley, covering cutting-edge research advancements</li>
+            <li>Includes 5 programming assignments, progressing from foundational to advanced practices</li>
+            <li>Provides lecture slides, video recordings, and supplementary reading materials</li>
+            <li>Focus on both theoretical foundations and practical implementation</li>
+            <li>Exploration of state-of-the-art algorithms like DQN, Policy Gradients, and PPO</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Homework Section -->
+    <h2 class="section-title">Homework Assignments</h2>
+    <div class="homework-container">
+      <div class="homework-card">
+        <i class="fas fa-laptop-code"></i>
+        <h3>Homework 1</h3>
+        <p>Introduction to RL and Imitation Learning</p>
+        <a href="hw1/hw1.html">View Assignment →</a>
+      </div>
+      
+      <div class="homework-card">
+        <i class="fas fa-robot"></i>
+        <h3>Homework 2</h3>
+        <p>Policy Gradients and Actor-Critic Methods</p>
+        <a href="hw2/hw2.html">View Assignment →</a>
+      </div>
+      
+      <div class="homework-card">
+        <i class="fas fa-brain"></i>
+        <h3>Homework 3</h3>
+        <p>Deep Q-Learning and Value-based Methods</p>
+        <a href="hw3/hw3.html">View Assignment →</a>
+      </div>
+      
+      <div class="homework-card">
+        <i class="fas fa-project-diagram"></i>
+        <h3>Homework 4</h3>
+        <p>Model-Based Reinforcement Learning</p>
+        <a href="hw4/hw4.html">View Assignment →</a>
+      </div>
+      
+      <div class="homework-card">
+        <i class="fas fa-rocket"></i>
+        <h3>Homework 5</h3>
+        <p>Advanced Topics and Final Project</p>
+        <a href="hw5/hw5.html">View Assignment →</a>
+      </div>
+    </div>
   </div>
 
-  <!-- 主内容区 -->
-  <div class="container">
-    <h1 class="title">Berkeley CS285 Course Notes</h1>
-
-    <!-- 欢迎卡片 -->
-    <div class="card">
-      <h2>Welcome to CS285 Course Notes!</h2>
-      <p>This is the page for CS285 (Deep Reinforcement Learning). It is a record of the struggle and progress of whom is trying to teach herself.</p>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>About CS285</h3>
+          <p>CS285: Deep Reinforcement Learning is a graduate-level course at UC Berkeley that covers fundamental concepts and recent advances in deep RL.</p>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="index.html">Main Page</a></li>
+            <li><a href="hw1/hw1.html">Homework 1</a></li>
+            <li><a href="hw2/hw2.html">Homework 2</a></li>
+            <li><a href="hw3/hw3.html">Homework 3</a></li>
+            <li><a href="hw4/hw4.html">Homework 4</a></li>
+            <li><a href="hw5/hw5.html">Homework 5</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Resources</h3>
+          <ul class="footer-links">
+            <li><a href="#">Lecture Slides</a></li>
+            <li><a href="#">Video Recordings</a></li>
+            <li><a href="#">Reading Materials</a></li>
+            <li><a href="#">Code Repository</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>© 2024 Berkeley CS285 Course Notes | Maintained by: Rosamound</p>
+      </div>
     </div>
-
-    <!-- 课程信息卡片 -->
-    <div class="card">
-      <h2>Course Highlights</h2>
-      <ul>
-        <li>Instructed by senior faculty from UC Berkeley, covering covering cutting-edge research advancements</li>
-        <li>Includes 5 programming assignments, progressing from foundational to advanced practices</li>
-        <li>Provides lecture slides, video recordings, and supplementary reading materials</li>
-      </ul>
-    </div>
-    </div>
-
-  <!-- 底部 -->
-  <div class="footer">
-    <p>© 2024 Berkeley CS285 Course Notes | Maintained by：Rosamound</p>
-  </div>
+  </footer>
 </body>
 </html>
